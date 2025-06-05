@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
   // all your button click code here
-alert("ambot")
+
 
 let drawBut = document.getElementById("drawBut");
 let d1Draw = document.getElementById("d1Draw");
