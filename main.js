@@ -2175,3 +2175,71 @@ clearInterval(spawnerTime)
 
   
          });
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  const loadingScreen = document.getElementById("loadingScreen");
+  const progressBar = document.getElementById("progressBar");
+  const assetCountText = document.getElementById("assetCount");
+
+  // Get all images and audio elements
+  const allImages = document.querySelectorAll("img");
+  const allAudio = document.querySelectorAll("audio");
+  
+  
+  
+  
+  const totalAssets = allImages.length + allAudio.length;
+  let loadedCount = 0;
+
+  function updateProgress() {
+    loadedCount++;
+    const percent = (loadedCount / totalAssets) * 100;
+    progressBar.style.width = percent + "%";
+    assetCountText.innerText = `${loadedCount} / ${totalAssets} Assets Loaded`;
+
+    if (loadedCount >= totalAssets) {
+      hideLoadingScreen();
+    }
+  }
+
+  function hideLoadingScreen() {
+    setTimeout(() => {
+      loadingScreen.style.opacity = "0";
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+      }, 1000);
+    }, 500); // Small delay so users see 100% completion
+  }
+
+  // Monitor Images
+  allImages.forEach(img => {
+    if (img.complete) {
+      updateProgress();
+    } else {
+      img.addEventListener("load", updateProgress);
+      img.addEventListener("error", updateProgress); // Count even if it fails to avoid getting stuck
+    }
+  });
+
+  // Monitor Audio
+  allAudio.forEach(audio => {
+    audio.addEventListener("canplaythrough", updateProgress, { once: true });
+    audio.addEventListener("error", updateProgress, { once: true });
+  });
+
+  // Safety Timeout: If loading takes > 10s, force start the game
+  setTimeout(() => {
+    if (loadingScreen.style.display !== "none") {
+      hideLoadingScreen();
+    }
+  }, 10000);
+
+  // --- REST OF YOUR ORIGINAL GAME CODE STARTS HERE ---
+  let drawBut = document.getElementById("drawBut");
+  // ... and so on
+});
